@@ -1,4 +1,4 @@
-package net.lipecki.demo;
+package net.lipecki.mtgcards;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

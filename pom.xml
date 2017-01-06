@@ -18,15 +18,26 @@
     <name>mtgcards</name>
     <description>Magic the Gathering companion app.</description>
 
-    <modules>
-        <module>mtgcards-app</module>
-        <module>mtgcards-web</module>
-    </modules>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
+
+    <modules>
+        <module>mtgcards-app</module>
+        <module>mtgcards-web</module>
+        <module>mtgcards-domain</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.lipecki.mtgcards</groupId>
+                <artifactId>mtgcards-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

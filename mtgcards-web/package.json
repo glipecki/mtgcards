@@ -5,7 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "ng": "node node_modules/angular-cli/bin/ng",
-    "start": "node node_modules/angular-cli/bin/ng serve",
+    "start": "node node_modules/angular-cli/bin/ng serve --proxy-config proxy.conf.json",
     "lint": "node node_modules/tslint/bin/tslint \"src/**/*.ts\"",
     "test": "node node_modules/angular-cli/bin/ng test",
     "pree2e": "node node_modules/webdriver-manager/bin/webdriver-manager update --standalone false --gecko false",
