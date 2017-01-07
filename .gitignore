@@ -6,3 +6,5 @@ node/
 *.iml
 mtgjson-data/
 runtime-data/
+npm-debug.log
+yarn.lock

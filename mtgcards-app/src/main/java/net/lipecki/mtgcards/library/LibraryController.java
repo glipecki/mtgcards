@@ -1,6 +1,8 @@
 package net.lipecki.mtgcards.library;
 
 import lombok.extern.slf4j.Slf4j;
+import net.lipecki.mtgcards.model.CardDto;
+import net.lipecki.mtgcards.model.csv.CsvFormat;
 import net.lipecki.mtgcards.gatherer.CardDefinition;
 import net.lipecki.mtgcards.gatherer.CardDefinitionsRepository;
 import net.lipecki.mtgcards.rest.Api;
@@ -45,29 +47,29 @@ public class LibraryController {
 
 	@PostMapping("/import/csv")
 	public LibraryImportBatchResult importCsvRecords(@RequestBody final String csvBody) throws IOException {
-		final CSVFormat csvFormat = CSVFormat.RFC4180.withHeader(ImportCsvRecord.HEADER);
+		final CSVFormat csvFormat = CSVFormat.RFC4180.withHeader(CsvFormat.HEADER);
 		final CSVParser records = csvFormat.parse(new StringReader(csvBody));
 
 		final Iterator<CSVRecord> recordsIterator = records.iterator();
 		final Stream<CSVRecord> recordsStream = convertToStream(recordsIterator);
-		final List<ImportRecord> importRecords = recordsStream
-				.map(ImportCsvRecord::csvToImportRecord)
+		final List<CardDto> importRecords = recordsStream
+				.map(CsvFormat::csvRecordToImportRecord)
 				.collect(Collectors.toList());
 
 		return importRecords(importRecords);
 	}
 
-	private LibraryImportBatchResult importRecords(final List<ImportRecord> importRecords) {
+	private LibraryImportBatchResult importRecords(final List<CardDto> importRecords) {
 		final LibraryImportBatchResult report = new LibraryImportBatchResult();
 
-		for (final ImportRecord record : importRecords) {
+		for (final CardDto record : importRecords) {
 			final Optional<CardDefinition> cardDefinition = cardDefinitionsRepository.findOneByNameAllIgnoreCase(record.getName());
 			if (cardDefinition.isPresent()) {
 				for (int i = 0; i < record.getCount(); ++i) {
 					cardsRepository.save(
 							Card.builder()
 									.definition(cardDefinition.get())
-									.foil(record.isFoil())
+									.foil(record.getFoil())
 									.build()
 					);
 					report.addAddedCard(cardDefinition.get().getName());
