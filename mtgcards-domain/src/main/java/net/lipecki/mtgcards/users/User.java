@@ -22,6 +22,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_users_id")
 	private Long id;
 
+	@Column
 	private String username;
 
 }

@@ -30,4 +30,7 @@ public class Card {
 	@ManyToOne
 	private User owner;
 
+	@Column
+	private Boolean foil;
+
 }

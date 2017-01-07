@@ -24,6 +24,4 @@ public class CardDefinition {
 
 	private String name;
 
-	private String link;
-
 }

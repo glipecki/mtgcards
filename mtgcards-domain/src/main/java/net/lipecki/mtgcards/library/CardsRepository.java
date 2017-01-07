@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * @author gregorry
  */
-public interface LibraryRepository extends JpaRepository<Card, Long> {
+public interface CardsRepository extends JpaRepository<Card, Long> {
 }

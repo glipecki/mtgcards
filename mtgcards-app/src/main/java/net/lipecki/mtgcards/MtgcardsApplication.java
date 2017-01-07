@@ -1,5 +1,6 @@
 package net.lipecki.mtgcards;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.ErrorViewResolver;
@@ -11,6 +12,11 @@ import java.util.Collections;
 
 @SpringBootApplication
 public class MtgcardsApplication {
+
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
+	}
 
 	@Bean
 	public ErrorViewResolver customErrorViewResolver() {

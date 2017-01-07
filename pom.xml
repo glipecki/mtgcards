@@ -28,10 +28,16 @@
         <module>mtgcards-app</module>
         <module>mtgcards-web</module>
         <module>mtgcards-domain</module>
+        <module>mtgcards-core</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>net.lipecki.mtgcards</groupId>
+                <artifactId>mtgcards-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>net.lipecki.mtgcards</groupId>
                 <artifactId>mtgcards-domain</artifactId>
