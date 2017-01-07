@@ -4,5 +4,5 @@ node_modules/
 node/
 .idea/
 *.iml
-mtgjson-data/*.json
+mtgjson-data/
 runtime-data/

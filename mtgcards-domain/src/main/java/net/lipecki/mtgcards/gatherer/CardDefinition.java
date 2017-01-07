@@ -15,11 +15,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "card_definitions")
+@Table(indexes = { @Index(name = "idx_name", columnList = "name") })
 public class CardDefinition {
 
+	public static final String SEQ_ID = "sq_card_definitions_id";
+
 	@Id
-	@SequenceGenerator(name = "sq_card_definitions_id", sequenceName = "sq_card_definitions_id", allocationSize = 1, initialValue = 10000)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_card_definitions_id")
+	@SequenceGenerator(name = SEQ_ID, sequenceName = SEQ_ID, allocationSize = 1, initialValue = 10000)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_ID)
 	private Long id;
 
 	private String name;

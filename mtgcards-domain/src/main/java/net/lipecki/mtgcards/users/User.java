@@ -17,9 +17,11 @@ import javax.persistence.*;
 @Entity(name = "users")
 public class User {
 
+	public static final String SEQ_ID = "sq_users_id";
+
 	@Id
-	@SequenceGenerator(name = "sq_users_id", sequenceName = "sq_users_id", allocationSize = 1, initialValue = 10000)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_users_id")
+	@SequenceGenerator(name = SEQ_ID, sequenceName = SEQ_ID, allocationSize = 1, initialValue = 10000)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_ID)
 	private Long id;
 
 	@Column

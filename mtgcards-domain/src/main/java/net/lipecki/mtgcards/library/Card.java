@@ -19,9 +19,11 @@ import javax.persistence.*;
 @Entity(name = "cards")
 public class Card {
 
+	public static final String SEQ_ID = "sq_cards_id";
+
 	@Id
-	@SequenceGenerator(name = "sq_cards_id", sequenceName = "sq_cards_id", allocationSize = 1, initialValue = 10000)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_cards_id")
+	@SequenceGenerator(name = SEQ_ID, sequenceName = SEQ_ID, allocationSize = 1, initialValue = 10000)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_ID)
 	private Long id;
 
 	@ManyToOne
