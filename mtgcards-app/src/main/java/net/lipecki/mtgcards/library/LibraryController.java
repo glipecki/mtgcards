@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
@@ -25,6 +26,7 @@ import java.util.stream.StreamSupport;
 @Slf4j
 @RestController
 @RequestMapping(Api.V1 + "/library")
+@Transactional
 public class LibraryController {
 
 	private static <T> Stream<T> convertToStream(final Iterator<T> iterator) {
@@ -49,13 +51,7 @@ public class LibraryController {
 		final Iterator<CSVRecord> recordsIterator = records.iterator();
 		final Stream<CSVRecord> recordsStream = convertToStream(recordsIterator);
 		final List<ImportRecord> importRecords = recordsStream
-				.map(
-						record -> ImportRecord.builder()
-								.name(record.get(ImportCsvRecord.NAME))
-								.count(Integer.valueOf(record.get(ImportCsvRecord.COUNT)))
-								.foil("foil".equals(record.get(ImportCsvRecord.FOIL)))
-								.build()
-				)
+				.map(ImportCsvRecord::csvToImportRecord)
 				.collect(Collectors.toList());
 
 		return importRecords(importRecords);
