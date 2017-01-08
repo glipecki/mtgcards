@@ -49,21 +49,40 @@ public class DeckMatchService {
 	}
 
 	private void recalculateDeckMatch(final Deck deck) {
-		Integer matchedCards = 0;
-		Integer requiredCards = 0;
-		for (final DeckCardDefinition deckCard : deck.getDeckCardDefinitions()) {
+		int mainMatchedCards = 0;
+		int mainRequiredCards = 0;
+		for (final DeckCardDefinition deckCard : deck.getMainCards()) {
 			final List<Card> cards = cardsRepository.findByDefinitionId(deckCard.getCardDefinition().getId());
-			matchedCards += Math.min(deckCard.getCount(), cards.size());
-			requiredCards += deckCard.getCount();
+			mainMatchedCards += Math.min(deckCard.getCount(), cards.size());
+			mainRequiredCards += deckCard.getCount();
 		}
+		double mainCompletionPercent = (double) Math.round(100 * mainMatchedCards / mainRequiredCards) / 100;
 
-		double completionPercent = (double) Math.round(100 * matchedCards / requiredCards) / 100;
+		int sideboardMatchedCards = 0;
+		int sideboardRequiredCards = 0;
+		for (final DeckCardDefinition deckCard : deck.getSideboardCards()) {
+			final List<Card> cards = cardsRepository.findByDefinitionId(deckCard.getCardDefinition().getId());
+			sideboardMatchedCards += Math.min(deckCard.getCount(), cards.size());
+			sideboardRequiredCards += deckCard.getCount();
+		}
+		double sideboardCompletionPercent = sideboardRequiredCards > 0 ? (double) Math.round(100 * sideboardMatchedCards / sideboardRequiredCards) / 100 : 1;
+
+		int overallMatchedCards = mainMatchedCards + sideboardMatchedCards;
+		int overallRequiredCards = mainRequiredCards + sideboardRequiredCards;
+		double overallCompletionPercent = (double) Math.round(100 * overallMatchedCards / overallRequiredCards) / 100;
+
 		deckMatchRepository.save(
 				DeckMatch.builder()
 						.deck(deck)
-						.matchedCards(matchedCards)
-						.requiredCards(requiredCards)
-						.completion(completionPercent)
+						.mainMatchedCards(mainMatchedCards)
+						.mainRequiredCards(mainRequiredCards)
+						.mainCompletion(mainCompletionPercent)
+						.sideboardMatchedCards(sideboardMatchedCards)
+						.sideboardRequiredCards(sideboardRequiredCards)
+						.sideboardCompletion(sideboardCompletionPercent)
+						.overallMatchedCards(overallMatchedCards)
+						.overallRequiredCards(overallRequiredCards)
+						.overallCompletion(overallCompletionPercent)
 						.build()
 		);
 	}

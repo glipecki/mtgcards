@@ -18,6 +18,8 @@ public class DeckDto {
 
 	private List<CardClusterDto> cards;
 
+	private List<CardClusterDto> sideboard;
+
 	private String title;
 
 }

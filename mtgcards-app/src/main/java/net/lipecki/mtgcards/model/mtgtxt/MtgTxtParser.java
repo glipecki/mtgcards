@@ -1,7 +1,5 @@
 package net.lipecki.mtgcards.model.mtgtxt;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +15,6 @@ public class MtgTxtParser {
 		return Arrays
 				.asList(body.split(LINE_END_REGEX))
 				.stream()
-				.filter(StringUtils::isNotBlank)
 				.collect(Collectors.toList());
 	}
 

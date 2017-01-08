@@ -2,11 +2,10 @@ package net.lipecki.mtgcards.decks;
 
 import lombok.extern.slf4j.Slf4j;
 import net.lipecki.mtgcards.execeptions.AppException;
+import net.lipecki.mtgcards.gatherer.CardDefinitionsRepository;
 import net.lipecki.mtgcards.model.CardClusterDto;
 import net.lipecki.mtgcards.model.DeckDto;
 import net.lipecki.mtgcards.model.mtgtxt.MtgTxtFormat;
-import net.lipecki.mtgcards.gatherer.CardDefinition;
-import net.lipecki.mtgcards.gatherer.CardDefinitionsRepository;
 import net.lipecki.mtgcards.rest.Api;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author gregorry
@@ -44,25 +42,19 @@ public class DecksController {
 	private DeckDto addDeck(final DeckDto deckDto) {
 		final Deck deck = Deck.builder()
 				.title(deckDto.getTitle())
-				.deckCardDefinitions(new ArrayList<>())
+				.mainCards(new ArrayList<>())
+				.sideboardCards(new ArrayList<>())
 				.build();
 
 		final List<String> missingCards = new ArrayList<>();
-		for (final CardClusterDto card : deckDto.getCards()) {
-			final Optional<CardDefinition> cardDefinition =
-					cardDefinitionsRepository.findOneByNameAllIgnoreCase(card.getName());
-			if (cardDefinition.isPresent()) {
-				deck.getDeckCardDefinitions().add(
-						DeckCardDefinition.builder()
-								.cardDefinition(cardDefinition.get())
-								.count(card.getCount())
-								.deck(deck)
-								.build()
-				);
-			} else {
-				missingCards.add(card.getName());
-			}
-		}
+
+		final DeckCardDefinitionParser mainCards = matchCards(deckDto.getCards());
+		deck.getMainCards().addAll(mainCards.getMatchedCards());
+		missingCards.addAll(mainCards.getMissingCards());
+
+		final DeckCardDefinitionParser sideboardCards = matchCards(deckDto.getSideboard());
+		deck.getSideboardCards().addAll(sideboardCards.getMatchedCards());
+		missingCards.addAll(sideboardCards.getMissingCards());
 
 		if (missingCards.isEmpty()) {
 			decksRepository.save(deck);
@@ -72,6 +64,10 @@ public class DecksController {
 					.of("Can't add deck due to missing card definitions")
 					.withData("missingCards", missingCards);
 		}
+	}
+
+	private DeckCardDefinitionParser matchCards(final List<CardClusterDto> cards) {
+		return new DeckCardDefinitionParser(cardDefinitionsRepository::findOneByNameAllIgnoreCase).parse(cards);
 	}
 
 }

@@ -26,9 +26,6 @@ public class DeckCardDefinition {
 	private Long id;
 
 	@ManyToOne
-	private Deck deck;
-
-	@ManyToOne
 	private CardDefinition cardDefinition;
 
 	@Column

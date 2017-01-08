@@ -4,8 +4,8 @@ import net.lipecki.mtgcards.model.CardClusterDto;
 import net.lipecki.mtgcards.model.DeckDto;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author gregorry
@@ -24,22 +24,36 @@ public class MtgTxtFormat {
 	}
 
 	public static DeckDto parseDeck(final String body) {
-		final List<String> lines = MtgTxtParser.asLines(body);
+		final List<CardClusterDto> mainCards = new ArrayList<>();
+		final List<CardClusterDto> sideboardCards = new ArrayList<>();
 
-		final String title = lines.get(0);
-		final List<String> cardLines = lines.subList(1, lines.size());
+		String title = null;
+		List<CardClusterDto> current = mainCards;
+		for (final String line : MtgTxtParser.asLines(body)) {
+			if (isCardLine(line)) {
+				current.add(txtLineToCardInDeckDto(line));
+			} else if (isSideboardSwitch(line)) {
+				current = sideboardCards;
+			} else if (!mainCards.isEmpty() && StringUtils.isBlank(line)) {
+				current = sideboardCards;
+			} else if (mainCards.isEmpty() && StringUtils.isNotBlank(line)) {
+				title = line;
+			}
+		}
 
 		return DeckDto.builder()
 				.title(title)
-				.cards(parseCards(cardLines))
+				.cards(mainCards)
+				.sideboard(sideboardCards)
 				.build();
 	}
 
-	public static List<CardClusterDto> parseCards(final List<String> cardLines) {
-		return cardLines
-				.stream()
-				.map(MtgTxtFormat::txtLineToCardInDeckDto)
-				.collect(Collectors.toList());
+	private static boolean isCardLine(final String line) {
+		return line.matches("\\d.*");
+	}
+
+	private static boolean isSideboardSwitch(final String line) {
+		return line.toLowerCase().startsWith("sideboard");
 	}
 
 	private static Integer parseCount(final String countPart) {

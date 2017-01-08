@@ -33,12 +33,30 @@ public class DeckMatch {
 	private User user;
 
 	@Column
-	private Integer matchedCards;
+	private Integer mainMatchedCards;
 
 	@Column
-	private Integer requiredCards;
+	private Integer mainRequiredCards;
 
 	@Column
-	private Double completion;
+	private Double mainCompletion;
+
+	@Column
+	private Integer sideboardMatchedCards;
+
+	@Column
+	private Integer sideboardRequiredCards;
+
+	@Column
+	private Double sideboardCompletion;
+
+	@Column
+	private Integer overallMatchedCards;
+
+	@Column
+	private Integer overallRequiredCards;
+
+	@Column
+	private Double overallCompletion;
 
 }

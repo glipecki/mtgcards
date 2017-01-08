@@ -29,7 +29,10 @@ public class Deck {
 	@Column
 	private String title;
 
-	@OneToMany(mappedBy = "deck", cascade = CascadeType.PERSIST)
-	private List<DeckCardDefinition> deckCardDefinitions = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<DeckCardDefinition> mainCards = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<DeckCardDefinition> sideboardCards = new ArrayList<>();
 
 }
