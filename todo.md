@@ -1,0 +1,4 @@
+- crawler talii
+- wyliczanie zgodności z pominięciem landów
+- odświeżanie dopasowań talii tylko dla możliwych zmian
+- aktualizacja danych kart (mtgjson)
